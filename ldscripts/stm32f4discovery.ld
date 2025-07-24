@@ -48,6 +48,7 @@ SECTIONS
  _etext = .;
  .data : {
   _data = .;
+  *(.data.vectors)
   *(.data*)
   . = ALIGN(4);
   _edata = .;

@@ -1,3 +1,37 @@
+
+# Supplementary files for "Runtime Code Generation for Constant-Time Secret-Indexed Array Accesses: Applications to PERK and NTRU" paper submission
+
+This project contains the source code relative to the "Runtime Code Generation for Constant-Time Secret-Indexed Array Accesses: Applications to PERK and NTRU" paper published in LATINCRYPT 2025. Sources are integrated in a fork of the pqm4 project. Below is the original pqm4 README.
+
+
+Benchmarks for can be run with the following command:
+```
+./benchmarks.py --nohashing -p nucleo-l4r5zi -u /dev/<uart device>
+```
+
+`/dev/<uart device>` is the host serial-device (tty or cu) connected to the uart of the board (usually `/dev/ttyACM0` on Linux).
+
+For reference, the pqm4 variants for PERK (found in the `crypto_sign/` folder) corresponding to the benchmarks in tables 4 and 5 of the paper are:
+
+| Method       | Variant                |
+|--------------|------------------------|
+| Table lookup | `perk_fy-*`            |
+| Codegen      | `perk_codegen_remap-*` |
+| Reference    | `perk_djb-*`           |
+
+Similarly, the pqm4 variants for NTRU (found in the `crypto_kem/` folder) corresponding to the benchmarks in table 6 of the paper are:
+
+| Method       | Variant                        |
+|--------------|--------------------------------|
+| CT shuffle   | `ntruhps2048509-shuffling`     |
+| Fisher-Yates | `ntruhps2048509-fy`            |
+| Codegen      | `ntruhps2048509-codegen-remap` |
+| CT sort      | `ntruhps2048509`               |
+
+Refer to the **pqm4** documentation for additional details and prerequisites.
+
+### Below is the original pqm4 README
+
 # pqm4
 Collection of post-quantum cryptographic algorithms for the ARM Cortex-M4
 

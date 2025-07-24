@@ -346,13 +346,42 @@ void systick_setup()
   systick_interrupt_enable();
   systick_counter_enable();
 }
+
+#if defined(NUCLEO_L4R5_BOARD) || defined(DISCOVERY_BOARD)
+#include <libopencm3/stm32/syscfg.h>
+#include <libopencm3/cm3/vector.h>
+#include <libopencmsis/core_cm3.h>
+#include <string.h>
+
+uint8_t VectorTable[sizeof(vector_table_t)] __attribute__((section(".data.vectors")));
+
+void remap_setup() {
+  rcc_periph_clock_enable(RCC_SYSCFG);
+  
+  memcpy(VectorTable, &vector_table, sizeof(VectorTable));
+  
+  __disable_irq();
+#if defined(NUCLEO_L4R5_BOARD)
+  SYSCFG_MEMRMP &= ~SYSCFG_MEMRMP_MEM_MODE_MASK;
+  SYSCFG_MEMRMP |= SYSCFG_MEMRMP_MEM_MODE_SRAM;
+#elif defined (DISCOVERY_BOARD)
+  SYSCFG_MEMRM &= ~0x3;
+  SYSCFG_MEMRM |= 0x3;
+#endif
+  __enable_irq();
+}
+#endif
+
 static volatile unsigned long long overflowcnt = 0;
 void hal_setup(const enum clock_mode clock)
 {
   clock_setup(clock);
   usart_setup();
   systick_setup();
-
+#if defined(NUCLEO_L4R5_BOARD) || defined(DISCOVERY_BOARD)
+  remap_setup();
+#endif
+  
   // wait for the first systick overflow
   // improves reliability of the benchmarking scripts since it makes it much
   // less likely that the host will miss the start of the output

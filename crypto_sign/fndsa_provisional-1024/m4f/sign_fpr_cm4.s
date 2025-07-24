@@ -1,1 +1,0 @@
-../../fndsa_provisional-512/m4f/sign_fpr_cm4.s
